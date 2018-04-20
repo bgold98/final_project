@@ -97,6 +97,10 @@ def get_famers_per_team():
 def make_famers_per_team_graph():
     lst = get_famers_per_team()
     data = [go.Bar(x = lst[0], y = lst[1])]
+    layout = go.Layout(
+    xaxis=dict(
+        type='Category',
+    ))
     py.plot(data, filename='basic-bar')
 
 def get_famers_per_position():
@@ -144,6 +148,13 @@ def make_famers_per_year_graph():
     trace = go.Scatter(x = lst[0], y = lst[1])
     data = [trace]
     py.plot(data, filename='basic-line')
+
+def make_famers_per_team_pie_graph():
+    lst = get_famers_per_team()
+    labels = lst[0]
+    values = lst[1]
+    trace = go.Pie(labels=labels, values=values)
+    py.plot([trace], filename='basic_pie_chart')
 
 
 conn = sqlite3.connect('baseball.db')
@@ -208,7 +219,7 @@ if __name__=="__main__":
               running = False
               print("bye")
               break
-          if response == "players":
+          elif response == "players":
               conn = sqlite3.connect('baseball.db')
               cur = conn.cursor()
 
@@ -227,7 +238,7 @@ if __name__=="__main__":
                       print(edited_row)
               except:
                   print("Not a valid player number")
-          if response == "teams":
+          elif response == "teams":
               conn = sqlite3.connect('baseball.db')
               cur = conn.cursor()
 
@@ -258,11 +269,12 @@ if __name__=="__main__":
                       print(edited_row)
               except:
                   "Not a valid player number"
-          if response == "graphs":
+          elif response == "graphs":
               print("Graph Options:")
               print("1 - Bar Graph of Hall of Famers on Each Team")
               print("2 - Pie Graph of Hall Famers at Each Position")
               print("3 - Line Graph of Number of Hall Famers Inducted Each Year Over Time")
+              print("4 - Pie Graph of Number of Hall Famers on Each Team")
               response = input("What graph number would you like to view? ")
               if response == "1":
                   make_famers_per_team_graph()
@@ -270,3 +282,7 @@ if __name__=="__main__":
                   make_famers_per_position_graph()
               if response == "3":
                   make_famers_per_year_graph()
+              if response == "4":
+                  make_famers_per_team_pie_graph()
+          else:
+            print("Not valid input")
